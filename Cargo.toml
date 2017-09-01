@@ -1,0 +1,9 @@
+[package]
+name = "zlin"
+version = "0.1.0"
+authors = ["Vadim Rutkovsky <vrutkovs@redhat.com>"]
+
+[dependencies]
+rocket = "0.3.2"
+rocket_codegen = "0.3.2"
+rand = "0.3"
