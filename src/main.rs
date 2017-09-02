@@ -16,7 +16,7 @@ use rocket::response::NamedFile;
 use rocket_contrib::Template;
 
 mod paste_id;
-use paste_id::PasteID;
+use paste_id::{PasteID, ID_LEN};
 
 struct PublicUrl(String);
 const DEFAULT_PUBLIC_URL: &'static str = "http://localhost:8000";
@@ -40,7 +40,7 @@ fn index() -> Template {
 
 #[post("/", data = "<paste>")]
 fn upload(paste: Data, public_url: State<PublicUrl>) -> io::Result<String> {
-    let id = PasteID::new(16);
+    let id = PasteID::new(ID_LEN);
     let filename = format!("upload/{id}", id = id);
     let url = format!("{public_url:?}/{id}\n", public_url = public_url.0, id = id);
 

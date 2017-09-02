@@ -8,7 +8,7 @@ use rocket::http::RawStr;
 
 /// Table to retrieve base62 values from.
 const BASE62: &'static [u8] = b"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-const ID_LEN: usize = 16;
+pub const ID_LEN: usize = 16;
 
 /// A _probably_ unique paste ID.
 pub struct PasteID<'a>(Cow<'a, str>);
