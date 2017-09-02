@@ -1,0 +1,13 @@
+[development]
+address = "0.0.0.0"
+port = 8000
+workers = 12
+log = "normal"
+public_url = "http://localhost:8000"
+
+[production]
+address = "0.0.0.0"
+port = 80
+workers = 12
+log = "critical"
+public_url = "http://localhost:8000"
