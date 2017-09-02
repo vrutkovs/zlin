@@ -1,0 +1,51 @@
+{% extends "base" %}
+
+{% block head %}
+<title>Zlin</title>
+<link rel="stylesheet" href="static/css/codemirror.css">
+<link rel="stylesheet" href="static/css/zlin.css">
+<script src="static/js/codemirror.js"></script>
+{% endblock head %}
+
+{% block content %}
+<div class="columns">
+  <div class="column is-11">
+    <div class="control">
+      <textarea id="code" name="code" class="textarea">{{ paste }}</textarea>
+    </div>
+  </div>
+  <div class="column">
+    <div class="field is-grouped">
+      <a href="/" class="button" title="New paste">
+        <span class="icon is-small">
+          <i class="fa fa-plus"></i>
+        </span>
+      </a>
+      <a href="/{{id}}/raw" class="button" title="View raw">
+        <span class="icon is-small">
+          <i class="fa fa-file-text-o"></i>
+        </span>
+      </a>
+    </div>
+  </div>
+</div>
+<script>
+var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+  lineNumbers: true,
+  readOnly: true,
+  //lineNumberFormatter: function(line) {
+  //  return "<a href='#" + line + "'>" + line + "</a>"
+  //}
+});
+// 
+// Highlight a line if hash is specified
+window.onhashchange = function () {
+  var hash = window.location.hash;
+  var line = hash.match(/#(.*)/)[1]
+  editor.setSelection(
+    { line: line-1, ch: 0 },
+    { line: line, ch: 0 },
+    { scroll: true });
+}
+</script>
+{% endblock content %}

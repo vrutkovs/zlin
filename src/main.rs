@@ -44,7 +44,7 @@ fn index() -> Template {
 fn upload_to_file(paste: String, public_url: State<PublicUrl>) -> io::Result<String> {
     let id = PasteID::new(ID_LEN);
 
-    let path_name = format!("upload/{id}", id = id);
+    let path_name = format!("upload/{}", id);
     let path = Path::new(&path_name);
     let display = path.display();
     let mut file = match File::create(&path) {
@@ -83,7 +83,32 @@ fn upload_html(paste: Result<Form<PasteForm>, Option<String>>, public_url: State
 }
 
 #[get("/<id>")]
-fn retrieve(id: PasteID) -> Option<File> {
+fn retrieve(id: PasteID) -> Template {
+    let path_name = format!("upload/{}", id);
+    let path = Path::new(&path_name);
+    let display = path.display();
+    let mut file = match File::open(&path) {
+        Err(why) => panic!("couldn't open {}: {}",
+                           display,
+                           why.description()),
+        Ok(file) => file,
+    };
+    let mut buffer = String::new();
+    match file.read_to_string(&mut buffer) {
+        Err(why) => panic!("couldn't read {}: {}",
+                            display,
+                            why.description()),
+        Ok(_) => {
+            let mut context = Context::new();
+            context.add("id", &format!("{}", id));
+            context.add("paste", &buffer);
+            Template::render("retrieve", &context)
+        }
+    }
+}
+
+#[get("/<id>/raw", rank = 2)]
+fn retrieve_raw(id: PasteID) -> Option<File> {
     let filename = format!("upload/{id}", id = id);
     File::open(&filename).ok()
 }
@@ -100,7 +125,8 @@ fn rocket() -> rocket::Rocket {
             index,
             upload_plain,
             upload_html,
-            retrieve
+            retrieve,
+            retrieve_raw
         ])
         .attach(AdHoc::on_attach(|rocket| {
             println!("Adding public_url managed state...");

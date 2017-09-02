@@ -18,12 +18,12 @@
   </div>
   <div class="column">
     <div class="field is-grouped">
-      <button id="reset" class="button">
+      <button id="reset" class="button" title="Reset paste">
         <span class="icon is-small">
           <i class="fa fa-plus"></i>
         </span>
       </button>
-      <button id="submit" class="button">
+      <button id="submit" class="button" title="Submit">
         <span class="icon is-small">
           <i class="fa fa-floppy-o"></i>
         </span>
