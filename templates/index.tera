@@ -8,13 +8,12 @@
 {% endblock head %}
 
 {% block content %}
-<form id="form" action="/" method="post">
-  <input type="hidden" id="text">
-</form>
 <div class="columns">
   <div class="column is-11">
     <div class="control">
-        <textarea id="code" class="textarea"></textarea>
+      <form id="form" action="/" method="post">
+        <textarea id="code" name="code" class="textarea"></textarea>
+      </form>
     </div>
   </div>
   <div class="column">
@@ -40,10 +39,7 @@
     editor.setValue('');
   };
   document.getElementById("submit").onclick = function(){
-    var form = document.getElementById("form");
-    var text = document.getElementById("text");
-    text.value = editor.getValue();
-    form.submit();
+    document.getElementById("form").submit();
   }
 </script>
 {% endblock content %}
