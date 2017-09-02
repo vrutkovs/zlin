@@ -2,11 +2,38 @@
 
 {% block head %}
 <title>Zlin</title>
+<link rel="stylesheet" href="static/css/codemirror.css">
+<link rel="stylesheet" href="static/css/zlin.css">
+<script src="static/js/codemirror.js"></script>
 {% endblock head %}
 
 {% block content %}
-<h1>Index</h1>
-<p class="important">
-  Welcome to my awesome homepage.
-</p>
+<form action="/" method="post">
+  <div class="columns">
+    <div class="column is-11">
+      <div class="control">
+          <textarea id="code" class="textarea"></textarea>
+      </div>
+    </div>
+    <div class="column">
+      <div class="field is-grouped">
+        <a class="button">
+          <span class="icon is-small">
+            <i class="fa fa-plus"></i>
+          </span>
+        </a>
+        <a class="button">
+          <span class="icon is-small">
+            <i class="fa fa-floppy-o"></i>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</form>
+<script>
+  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+    lineNumbers: true
+  });
+</script>
 {% endblock content %}

@@ -1,0 +1,7 @@
+.CodeMirror {
+    min-height: 90vh !important;
+}
+
+.is-almost-fullheight {
+    min-height: 90vh;
+}
