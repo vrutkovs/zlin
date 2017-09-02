@@ -4,7 +4,7 @@
 extern crate rocket;
 extern crate rocket_contrib;
 extern crate rand;
-#[macro_use] extern crate serde_derive;
+extern crate tera;
 
 use std::io;
 use std::path::{Path, PathBuf};
@@ -15,26 +15,17 @@ use rocket::fairing::AdHoc;
 use rocket::response::NamedFile;
 use rocket_contrib::Template;
 
+use tera::Context;
+
 mod paste_id;
 use paste_id::{PasteID, ID_LEN};
 
 struct PublicUrl(String);
 const DEFAULT_PUBLIC_URL: &'static str = "http://localhost:8000";
 
-#[derive(Serialize)]
-struct TemplateContext {
-    name: String,
-    items: Vec<String>
-}
-
-
 #[get("/")]
 fn index() -> Template {
-    let context = TemplateContext {
-        name: String::from("index"),
-        items: Vec::new()
-    };
-
+    let context = Context::new();
     Template::render("index", &context)
 }
 
