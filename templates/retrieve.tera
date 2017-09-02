@@ -8,25 +8,19 @@
 <script src="static/js/codemirror.js"></script>
 {% endblock head %}
 
+{% block navbar_buttons %}
+<a href="/{{id}}/raw" class="navbar-item" title="View raw">
+  <span class="icon is-small">
+    <i class="fa fa-file-text-o"></i>
+  </span>
+</a>
+{% endblock navbar_buttons %}
+
 {% block content %}
 <div class="columns">
-  <div class="column is-11">
+  <div class="column is-12">
     <div class="control cm-m-read-only">
       <textarea id="code" name="code" class="textarea">{{ paste }}</textarea>
-    </div>
-  </div>
-  <div class="column">
-    <div class="field is-grouped">
-      <a href="/" class="button" title="New paste">
-        <span class="icon is-small">
-          <i class="fa fa-plus"></i>
-        </span>
-      </a>
-      <a href="/{{id}}/raw" class="button" title="View raw">
-        <span class="icon is-small">
-          <i class="fa fa-file-text-o"></i>
-        </span>
-      </a>
     </div>
   </div>
 </div>

@@ -7,27 +7,26 @@
 <script src="static/js/codemirror.js"></script>
 {% endblock head %}
 
+{% block navbar_buttons %}
+<a id="reset" class="navbar-item" title="Reset paste">
+  <span class="icon is-small">
+    <i class="fa fa-plus"></i>
+  </span>
+</a>
+<a id="submit" class="navbar-item" title="Submit">
+  <span class="icon is-small">
+    <i class="fa fa-floppy-o"></i>
+  </span>
+</a>
+{% endblock navbar_buttons %}
+
 {% block content %}
 <div class="columns">
-  <div class="column is-11">
+  <div class="column is-12">
     <div class="control">
       <form id="form" action="/" method="post">
         <textarea id="code" name="code" class="textarea"></textarea>
       </form>
-    </div>
-  </div>
-  <div class="column">
-    <div class="field is-grouped">
-      <button id="reset" class="button" title="Reset paste">
-        <span class="icon is-small">
-          <i class="fa fa-plus"></i>
-        </span>
-      </button>
-      <button id="submit" class="button" title="Submit">
-        <span class="icon is-small">
-          <i class="fa fa-floppy-o"></i>
-        </span>
-      </button>
     </div>
   </div>
 </div>

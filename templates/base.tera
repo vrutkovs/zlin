@@ -9,12 +9,19 @@
   </head>
   <body>
     <nav class="navbar">
-      <a class="navbar-item" href="https://github.com/vrutkovs/zlin" target="_blank">
-        Zlin &nbsp;
-        <span class="icon" style="color: #333;">
-          <i class="fa fa-github"></i>
-        </span>
-      </a>
+      <div class="navbar-brand">
+          <a class="navbar-item" href="/">Zlin</a>
+      </div>
+      <div class="navbar-start">
+        {% block navbar_buttons %}{% endblock navbar_buttons %}
+      </div>
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/vrutkovs/zlin" target="_blank">
+          <span class="icon" style="color: #333;">
+            <i class="fa fa-github"></i>
+          </span>
+        </a>
+      </div>
     </nav>
     <section class="hero is-almost-fullheight">
       <div class="container is-fluid">
