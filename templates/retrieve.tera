@@ -4,6 +4,7 @@
 <title>Zlin</title>
 <link rel="stylesheet" href="static/css/codemirror.css">
 <link rel="stylesheet" href="static/css/zlin.css">
+<link rel="stylesheet" href="static/css/zlin-readonly.css">
 <script src="static/js/codemirror.js"></script>
 {% endblock head %}
 
