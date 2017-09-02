@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="static/css/font-awesome.min.css">
   </head>
   <body>
-    <nav class="level">
-    </nav>
     <section class="section is-large">
         <div class="container is-fluid">
         {% block content %}{% endblock content %}
