@@ -16,7 +16,9 @@ use std::error::Error;
 use rocket::{Data, State};
 use rocket::fairing::AdHoc;
 use rocket::response::{NamedFile, Redirect};
+use rocket::response::status::{NotFound, Custom};
 use rocket::request::Form;
+use rocket::http::Status;
 use rocket_contrib::Template;
 
 use tera::Context;
@@ -73,36 +75,38 @@ fn upload_plain(paste: Data, public_url: State<PublicUrl>) -> io::Result<String>
 
 #[post("/", data = "<paste>")]
 fn upload_html(paste: Result<Form<PasteForm>, Option<String>>, 
-               public_url: State<PublicUrl>) -> Redirect {
+               public_url: State<PublicUrl>) -> Result<Redirect, Custom<String>> {
     match paste {
-        Ok(f) => Redirect::temporary(
-                    upload_to_file(f.get().text.clone(), public_url)
-                .unwrap().borrow()),
-        _ => Redirect::to("/"),
+        Ok(f) => Ok(Redirect::temporary(
+                        upload_to_file(f.get().text.clone(), public_url)
+                    .unwrap().borrow())),
+        Err(f) => Err(Custom(Status::InternalServerError, f.unwrap())),
     }
 }
 
 #[get("/<id>")]
-fn retrieve(id: PasteID) -> Template {
+fn retrieve(id: PasteID) -> Result<Template, Custom<String>> {
     let path_name = format!("upload/{}", id);
     let path = Path::new(&path_name);
-    let display = path.display();
     let mut file = match File::open(&path) {
-        Err(why) => panic!("couldn't open {}: {}",
-                           display,
-                           why.description()),
+        Err(why) => return Err(Custom(Status::InternalServerError, format!(
+                        "couldn't open {}: {}",
+                           path.display(),
+                           why.description())
+                    )),
         Ok(file) => file,
     };
     let mut buffer = String::new();
     match file.read_to_string(&mut buffer) {
-        Err(why) => panic!("couldn't read {}: {}",
-                            display,
-                            why.description()),
+        Err(why) => Err(Custom(Status::InternalServerError, format!(
+                        "couldn't read {}: {}", 
+                            path.display(), why.description())
+                    )),
         Ok(_) => {
             let mut context = Context::new();
-            context.add("id", &format!("{}", id));
+            context.add("id", &id.to_string());
             context.add("paste", &buffer);
-            Template::render("retrieve", &context)
+            Ok(Template::render("retrieve", &context))
         }
     }
 }
@@ -114,8 +118,11 @@ fn retrieve_raw(id: PasteID) -> Option<File> {
 }
 
 #[get("/static/<file..>")]
-fn static_files(file: PathBuf) -> Option<NamedFile> {
-    NamedFile::open(Path::new("static/").join(file)).ok()
+fn static_files(file: PathBuf) -> Result<NamedFile, NotFound<String>> {
+    let path = Path::new("static/").join(file);
+    NamedFile::open(&path).map_err(|_|
+        NotFound(format!("Bad path: {}", path.display()))
+    )
 }
 
 fn rocket() -> rocket::Rocket {
