@@ -48,15 +48,15 @@ fn upload_to_file(paste: String, public_url: State<PublicUrl>) -> io::Result<Str
     let path = Path::new(&path_name);
     let display = path.display();
     let mut file = match File::create(&path) {
-        Err(why) => panic!("couldn't create {}: {}",
+        Err(why) => return Err(format!("couldn't create {}: {}",
                            display,
-                           why.description()),
+                           why.description())),
         Ok(file) => file,
     };
     match file.write_all(paste.as_bytes()) {
-        Err(why) => panic!("couldn't write to {}: {}", 
+        Err(why) => return Err(format!("couldn't write to {}: {}", 
                            display,
-                           why.description()),
+                           why.description())),
         Ok(_) => println!("successfully wrote to {}", display),
     }
 
