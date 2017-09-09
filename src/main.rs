@@ -48,17 +48,12 @@ fn upload_to_file(paste: String, public_url: State<PublicUrl>) -> io::Result<Str
 
     let path_name = format!("upload/{}", id);
     let path = Path::new(&path_name);
-    let display = path.display();
     let mut file = match File::create(&path) {
-        Err(why) => return Err(format!("couldn't create {}: {}",
-                           display,
-                           why.description())),
+        Err(why) => return Err(why),
         Ok(file) => file,
     };
     match file.write_all(paste.as_bytes()) {
-        Err(why) => Err(format!("couldn't write to {}: {}", 
-                                display,
-                                why.description())),
+        Err(why) => Err(why),
         Ok(_) => Ok(format!(
             "{public_url}/{id}\n", 
             public_url = public_url.0, 
@@ -77,9 +72,14 @@ fn upload_plain(paste: Data, public_url: State<PublicUrl>) -> io::Result<String>
 fn upload_html(paste: Result<Form<PasteForm>, Option<String>>, 
                public_url: State<PublicUrl>) -> Result<Redirect, Custom<String>> {
     match paste {
-        Ok(f) => Ok(Redirect::to(
-                        upload_to_file(f.get().text.clone(), public_url)
-                    .unwrap().borrow())),
+        Ok(f) => {
+            match upload_to_file(f.get().text.clone(), public_url) {
+                Ok(url) => Ok(Redirect::to(url.borrow())),
+                Err(why) => Err(Custom(
+                    Status::InternalServerError,
+                    format!("failed to upload file: {}", why.description())))
+            }
+        },
         Err(f) => Err(Custom(Status::InternalServerError, f.unwrap())),
     }
 }
