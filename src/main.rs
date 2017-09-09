@@ -77,7 +77,7 @@ fn upload_plain(paste: Data, public_url: State<PublicUrl>) -> io::Result<String>
 fn upload_html(paste: Result<Form<PasteForm>, Option<String>>, 
                public_url: State<PublicUrl>) -> Result<Redirect, Custom<String>> {
     match paste {
-        Ok(f) => Ok(Redirect::temporary(
+        Ok(f) => Ok(Redirect::to(
                         upload_to_file(f.get().text.clone(), public_url)
                     .unwrap().borrow())),
         Err(f) => Err(Custom(Status::InternalServerError, f.unwrap())),
