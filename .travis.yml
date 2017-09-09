@@ -1,0 +1,17 @@
+# Config file for automatic testing at travis-ci.org
+# This file will be regenerated if you run travis_pypi_setup.py
+sudo: required
+
+services:
+  - docker
+
+language: rust
+rust:
+  - nightly
+
+script: "cargo build --verbose --all"
+
+after_success:
+  - docker build -t vrutkovs/zlin .
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker push vrutkovs/zlin
