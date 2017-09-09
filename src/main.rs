@@ -71,14 +71,13 @@ fn upload_plain(paste: Data, public_url: State<PublicUrl>) -> io::Result<String>
 }
 
 #[post("/", data = "<paste>")]
-fn upload_html(paste: Result<Form<PasteForm>, Option<String>>, public_url: State<PublicUrl>) -> Redirect {
+fn upload_html(paste: Result<Form<PasteForm>, Option<String>>, 
+               public_url: State<PublicUrl>) -> Redirect {
     match paste {
-        Ok(f) => {
-            let paste_text = f.get().text.clone();
-            Redirect::to(upload_to_file(paste_text, public_url).unwrap().borrow())
-        },
-        Err(Some(_)) => Redirect::to("/404"),
-        Err(None) => Redirect::to("/404"),
+        Ok(f) => Redirect::temporary(
+                    upload_to_file(f.get().text.clone(), public_url)
+                .unwrap().borrow()),
+        _ => Redirect::to("/"),
     }
 }
 
