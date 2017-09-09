@@ -54,13 +54,14 @@ fn upload_to_file(paste: String, public_url: State<PublicUrl>) -> io::Result<Str
         Ok(file) => file,
     };
     match file.write_all(paste.as_bytes()) {
-        Err(why) => return Err(format!("couldn't write to {}: {}", 
-                           display,
-                           why.description())),
-        Ok(_) => println!("successfully wrote to {}", display),
+        Err(why) => Err(format!("couldn't write to {}: {}", 
+                                display,
+                                why.description())),
+        Ok(_) => Ok(format!(
+            "{public_url}/{id}\n", 
+            public_url = public_url.0, 
+            id = id)),
     }
-
-    Ok(format!("{public_url}/{id}\n", public_url = public_url.0, id = id))
 }
 
 #[post("/api", data = "<paste>")]
