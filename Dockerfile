@@ -14,6 +14,9 @@ COPY static /zlin/static
 COPY templates /zlin/templates
 RUN cargo build --release
 
+# Make the image runnable as non-user
+RUN chown nobody:nobody -R target/ .cargo/
+
 VOLUME ["/zlin/upload"]
 
 EXPOSE 80
